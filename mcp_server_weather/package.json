@@ -1,0 +1,33 @@
+{
+  "name": "mcp-city-weather",
+  "version": "1.1.0",
+  "description": "Weather MCP server for fetching city weather forecasts",
+  "type": "module",
+  "bin": {
+    "mcp-city-weather": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "weather",
+    "mcp",
+    "server"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.8.0",
+    "express": "^5.1.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.14.0",
+    "typescript": "^5.8.3"
+  }
+}

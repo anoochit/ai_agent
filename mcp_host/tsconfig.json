@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", // Or your desired ECMAScript target
+    "module": "NodeNext", // Since you're using "type": "module"
+    "outDir": "./build", // Output directory for compiled JS
+    "rootDir": "./src", // Root directory of your TS source files
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "NodeNext"
+  },
+  "include": ["src/**/*"], // Include all files in the src directory
+  "exclude": ["node_modules", "**/*.spec.ts"] // Exclude node_modules and test files
+}
