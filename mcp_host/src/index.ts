@@ -3,9 +3,11 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { SSEClientTransport } from "@modelcontextprotocol/sdk/client/sse.js";
 import dotenv from "dotenv";
 import readline from "readline/promises";
+import { text } from "stream/consumers";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const MCP_SERVER_ENDPOINT = process.env.MCP_SERVER_ENDPOINT || 'http://localhost:3000/sse';
+const MCP_SERVER_ENDPOINT =
+  process.env.MCP_SERVER_ENDPOINT || "http://localhost:3000/sse";
 
 dotenv.config();
 
@@ -90,7 +92,7 @@ class MCPClient {
       // call Gemini model
       const model = this.gemini.models;
       const result = await model.generateContent({
-        model: "gemini-2.5-pro-exp-03-25",
+        model: "gemini-2.0-flash",
         contents: [{ role: "user", parts: [{ text: query }] }],
         config: {
           tools: [
@@ -138,6 +140,7 @@ class MCPClient {
           try {
             // Execute the function via MCP client
             const result = await this.executeFunction(name!, args);
+
             functionResults.push({
               name,
               args,
@@ -181,25 +184,28 @@ class MCPClient {
     try {
       const model = this.gemini.models;
 
+      const mcpResult = functionResults.map((fr) => ({
+        result: fr.result,
+      }));
+
+      console.log(mcpResult);
+
       // Prepare the conversation history
       const contents = [
-        { role: "user", parts: [{ text: originalQuery }] },
+        // { role: "user", parts: [{ text: originalQuery }] },
         {
-          role: "model",
-          parts: [{ text: "Summary of function results" }],
-          functionCalls: functionResults.map((fr) => ({
-            result: fr.result,
-          })),
+          role: "user",
+          parts: [{ text: "Summary\n" }, { text: JSON.stringify(mcpResult) }],
         },
       ];
 
       const result = await model.generateContent({
-        model: "gemini-2.5-pro-exp-03-25",
+        model: "gemini-2.0-flash",
         contents: contents,
       });
 
       const textResponse = result.text;
-      console.log("Follow-up Response:", textResponse);
+      console.log("Summary Response:", textResponse);
       return textResponse;
     } catch (error) {
       console.error("Error sending function results to Gemini:", error);
@@ -242,9 +248,9 @@ async function main() {
   const mcpClient = new MCPClient();
   try {
     await mcpClient.connectToServer(MCP_SERVER_ENDPOINT);
-    // await mcpClient.processQuery("What's weather in Bangkok");
+    await mcpClient.processQuery("What's weather in Bangkok");
     // await mcpClient.processQuery("My weight is 70kg 1.65m. What's my BMI?");
-    await mcpClient.chatLoop();
+    // await mcpClient.chatLoop();
   } finally {
     await mcpClient.cleanup();
     process.exit(0);
