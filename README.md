@@ -6,3 +6,8 @@ A sample AI Agent Gemini with MCP Server SSE
  * [MCP Client](/mcp_client/)
  * [MCP Server - OpenWeatherMap](/mcp_server_weather/)
  * [CLI Agent](/mcp_host/)
+
+Resources
+
+ * [Building AI Agents with Google’s Agent Development Kit (ADK) as MCP Client — A Deep Dive (Full Code)](https://medium.com/google-cloud/building-ai-agents-with-googles-agent-development-kit-adk-as-mcp-client-a-deep-dive-full-54d683713afe) 
+ * [Model Context Protocol(MCP) with Google Gemini 2.5 Pro — A Deep Dive (Full Code)](https://medium.com/google-cloud/model-context-protocol-mcp-with-google-gemini-llm-a-deep-dive-full-code-ea16e3fac9a3)
