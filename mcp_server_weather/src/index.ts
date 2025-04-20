@@ -98,7 +98,7 @@ server.tool(
     content: [
       {
         type: "text",
-        text: String(weightKg / (heightM * heightM)),
+        text: 'BMI = ' + (weightKg / (heightM * heightM)).toFixed(2) + '\n',
       },
     ],
   })

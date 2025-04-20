@@ -248,8 +248,8 @@ async function main() {
   const mcpClient = new MCPClient();
   try {
     await mcpClient.connectToServer(MCP_SERVER_ENDPOINT);
-    await mcpClient.processQuery("What's weather in Bangkok");
-    // await mcpClient.processQuery("My weight is 70kg 1.65m. What's my BMI?");
+    // await mcpClient.processQuery("What's weather in Bangkok");
+    await mcpClient.processQuery("My weight is 70kg 1.65m. What's my BMI?");
     // await mcpClient.chatLoop();
   } finally {
     await mcpClient.cleanup();
