@@ -184,18 +184,18 @@ class MCPClient {
     try {
       const model = this.gemini.models;
 
-      const mcpResult = functionResults.map((fr) => ({
-        result: fr.result,
-      }));
+      const mcpResult = functionResults.map((fr) => (
+         fr.result.content[0].text + '\n'
+      ));
 
-      console.log(mcpResult);
+      console.log(JSON.stringify(mcpResult, null, 2));
 
       // Prepare the conversation history
       const contents = [
         // { role: "user", parts: [{ text: originalQuery }] },
         {
           role: "user",
-          parts: [{ text: "Summary\n" }, { text: JSON.stringify(mcpResult) }],
+          parts: [{ text: "Summary\n" }, { text: `${mcpResult}` }],
         },
       ];
 
