@@ -99,7 +99,7 @@ print(f"Searching for chunks relevant to: '{query}'")
 # Otherwise, it uses the default (often 4)
 try:
     docs = vectorStore.similarity_search(
-        query, k=4)  # Example: Get top 4 chunks
+        query, k=3)  # Example: Get top 4 chunks
     print(f"Found {len(docs)} relevant chunks.")
     if not docs:
         print("No relevant documents found.")
