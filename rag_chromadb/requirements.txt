@@ -1,0 +1,6 @@
+langchain-community
+langchain-huggingface
+langchain-chroma
+sentence-transformers
+google-genai
+python-dotenv
