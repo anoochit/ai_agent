@@ -6,7 +6,8 @@ A sample AI Agent Gemini with MCP Server SSE
  * [MCP Client](/mcp_client/)
  * [MCP Server - OpenWeatherMap and BMI Calculator](/mcp_server/)
  * [CLI Agent](/mcp_host/)
- * [Kama Sutra RAG](/rag/)
+ * [Kama Sutra RAG + FAISS](/rag/)
+ * [Kama Sutra RAG + ChromaDB](/rag_chromadb/)
 
 Resources
 
