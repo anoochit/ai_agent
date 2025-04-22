@@ -2,8 +2,7 @@ import express, { Request, Response } from "express";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 
-import { z } from "zod";
-import { hostname } from "os";
+import * as z from "zod"; 
 
 const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
 const OPEN_WEATHER_MAP_API_KEY = process.env.OPEN_WEATHER_MAP_API_KEY;
@@ -98,7 +97,7 @@ server.tool(
     content: [
       {
         type: "text",
-        text: 'BMI = ' + (weightKg / (heightM * heightM)).toFixed(2) + '\n',
+        text: "BMI = " + (weightKg / (heightM * heightM)).toFixed(2) + "\n",
       },
     ],
   })
