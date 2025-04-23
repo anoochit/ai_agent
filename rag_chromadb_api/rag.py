@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Body
 from pydantic import BaseModel
 import uvicorn
-from contextlib import asynccontextmanager # Import asynccontextmanager
+from contextlib import asynccontextmanager  # Import asynccontextmanager
 
 from langchain_community.document_loaders import TextLoader
 from langchain_chroma import Chroma
@@ -14,7 +14,8 @@ from google import genai
 
 # --- Configuration & Initialization ---
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Load API keys from .env file
 load_dotenv()
@@ -38,11 +39,13 @@ app_state = {"vectorStore": None, "embedding_model": None}
 
 # --- Helper Functions ---
 
+
 def load_and_split_document(file_path: str, chunk_size: int = 1000, chunk_overlap: int = 100) -> list:
     """Loads a text document and splits it into chunks."""
     if not os.path.exists(file_path):
         logging.error(f"Could not find the document at path: {file_path}")
-        raise FileNotFoundError(f"Could not find the document at path: {file_path}")
+        raise FileNotFoundError(
+            f"Could not find the document at path: {file_path}")
 
     logging.info(f"Attempting to load document from: {file_path}")
     try:
@@ -53,50 +56,60 @@ def load_and_split_document(file_path: str, chunk_size: int = 1000, chunk_overla
         raise
 
     logging.info("Splitting document into chunks...")
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     texts = text_splitter.split_documents(documents)
     logging.info(f"Split into {len(texts)} chunks.")
     return texts
+
 
 def initialize_vector_store(persist_directory: str, texts: list = None) -> Chroma:
     """Initializes or loads the Chroma vector store."""
     # Access embedding model via app_state if needed, or initialize locally
     if app_state["embedding_model"] is None:
         logging.info("Initializing embedding model...")
-        app_state["embedding_model"] = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+        app_state["embedding_model"] = HuggingFaceEmbeddings(
+            model_name="sentence-transformers/all-MiniLM-L6-v2")
         logging.info("Embedding model initialized.")
 
-    embedding_function = app_state["embedding_model"] # Use the initialized model
+    # Use the initialized model
+    embedding_function = app_state["embedding_model"]
 
     loaded_store = None
     if os.path.exists(persist_directory):
-        logging.info(f"Attempting to load existing ChromaDB index from: {persist_directory}")
+        logging.info(
+            f"Attempting to load existing ChromaDB index from: {persist_directory}")
         try:
             loaded_store = Chroma(
                 persist_directory=persist_directory,
-                embedding_function=embedding_function # Pass the function here
+                embedding_function=embedding_function  # Pass the function here
             )
             # Check if the collection exists and has documents
             if loaded_store._collection and loaded_store._collection.count() > 0:
-                 logging.info(f"Loaded {loaded_store._collection.count()} documents from existing DB.")
-                 return loaded_store
+                logging.info(
+                    f"Loaded {loaded_store._collection.count()} documents from existing DB.")
+                return loaded_store
             else:
-                 logging.warning("Existing ChromaDB directory found, but the collection is empty or invalid. Will create a new one.")
-                 loaded_store = None # Force creation
+                logging.warning(
+                    "Existing ChromaDB directory found, but the collection is empty or invalid. Will create a new one.")
+                loaded_store = None  # Force creation
         except Exception as e:
-            logging.warning(f"Error loading existing ChromaDB: {e}. Will attempt to create a new one.")
-            loaded_store = None # Force creation
+            logging.warning(
+                f"Error loading existing ChromaDB: {e}. Will attempt to create a new one.")
+            loaded_store = None  # Force creation
 
     # Create new store if loading failed or directory didn't exist or was empty
     if loaded_store is None:
         logging.info("Creating new ChromaDB index...")
         if not texts:
-            logging.error("No text chunks provided to create a new vector store.")
-            raise ValueError("Cannot create a new vector store without text chunks.")
+            logging.error(
+                "No text chunks provided to create a new vector store.")
+            raise ValueError(
+                "Cannot create a new vector store without text chunks.")
         try:
             new_store = Chroma.from_documents(
                 documents=texts,
-                embedding=embedding_function, # Pass the function here
+                embedding=embedding_function,  # Pass the function here
                 persist_directory=persist_directory
             )
             logging.info(f"Created new DB and added {len(texts)} documents.")
@@ -111,10 +124,12 @@ def initialize_vector_store(persist_directory: str, texts: list = None) -> Chrom
 
 def search_documents(query: str, k: int = 5) -> list:
     """Performs similarity search on the vector store."""
-    vectorStore = app_state.get("vectorStore") # Get store from app_state
+    vectorStore = app_state.get("vectorStore")  # Get store from app_state
     if vectorStore is None:
-        logging.error("Vector store is not initialized or available in app state.")
-        raise ValueError("Vector store not initialized. Cannot perform search.")
+        logging.error(
+            "Vector store is not initialized or available in app state.")
+        raise ValueError(
+            "Vector store not initialized. Cannot perform search.")
 
     logging.info(f"Searching for chunks relevant to: '{query}'")
     try:
@@ -124,6 +139,7 @@ def search_documents(query: str, k: int = 5) -> list:
     except Exception as e:
         logging.error(f"Error during similarity search: {e}")
         raise
+
 
 def generate_summary(query: str, context: str) -> str:
     """Generates a summary using the Gemini model based on context and query."""
@@ -141,28 +157,29 @@ Context:
     try:
         # Ensure the client is initialized (already done at module level)
         if client is None:
-             raise ValueError("Gemini client is not initialized.")
+            raise ValueError("Gemini client is not initialized.")
 
         # Use the correct method for the genai client
         # Note: Corrected the API call based on previous interaction
         response = client.models.generate_content(
-            model='models/gemini-1.5-flash', # Or your preferred model
+            model='models/gemini-1.5-flash',  # Or your preferred model
             contents=prompt
         )
         # Access the text part of the response
         if response.text:
             return response.text
-        elif hasattr(response, 'text'): # Fallback
-             return response.text
+        elif hasattr(response, 'text'):  # Fallback
+            return response.text
         else:
-             logging.error(f"Unexpected Gemini response structure: {response}")
-             raise ValueError("Could not extract text from Gemini response.")
+            logging.error(f"Unexpected Gemini response structure: {response}")
+            raise ValueError("Could not extract text from Gemini response.")
 
     except Exception as e:
         logging.error(f"Error generating response with Gemini: {e}")
         raise
 
 # --- Lifespan Management ---
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -178,12 +195,14 @@ async def lifespan(app: FastAPI):
         # Load and split only if DB needs creation
         texts = None
         if not os.path.exists(persist_directory):
-             logging.info("ChromaDB directory not found. Loading and splitting document for creation.")
-             texts = load_and_split_document(file_path)
+            logging.info(
+                "ChromaDB directory not found. Loading and splitting document for creation.")
+            texts = load_and_split_document(file_path)
 
         # Initialize vector store (will load if exists, create if not)
         # Store the initialized vector store in app_state
-        app_state["vectorStore"] = initialize_vector_store(persist_directory, texts)
+        app_state["vectorStore"] = initialize_vector_store(
+            persist_directory, texts)
         logging.info("Vector store initialized successfully for API.")
 
     except FileNotFoundError as e:
@@ -193,11 +212,11 @@ async def lifespan(app: FastAPI):
         logging.error(f"Startup Error initializing vector store: {e}")
         raise RuntimeError(f"Failed to initialize vector store: {e}") from e
 
-    yield # Application runs here
+    yield  # Application runs here
 
     # Shutdown: Clean up resources (optional here, but good practice)
     logging.info("Application shutdown: Cleaning up resources...")
-    app_state["vectorStore"] = None # Release reference
+    app_state["vectorStore"] = None  # Release reference
     app_state["embedding_model"] = None
     # Add any other cleanup needed, e.g., closing connections
 
@@ -209,22 +228,20 @@ app = FastAPI(
     title="RAG Search and Summary API",
     description="API to search documents using ChromaDB and generate summaries with Gemini.",
     version="1.0.0",
-    lifespan=lifespan # Register the lifespan handler
+    lifespan=lifespan  # Register the lifespan handler
 )
+
 
 class SearchRequest(BaseModel):
     query: str
-    k: int = 5 # Number of documents to retrieve
+    k: int = 5  # Number of documents to retrieve
+
 
 class SearchResponse(BaseModel):
     query: str
     summary: str
-    retrieved_context: str | None = None # Optional: return context for debugging
+    retrieved_context: str | None = None  # Optional: return context for debugging
 
-# Remove the old @app.on_event("startup") decorator and function
-# @app.on_event("startup")
-# async def startup_event():
-#     ... # Old startup logic is now in lifespan
 
 @app.post("/search", response_model=SearchResponse)
 async def search_and_summarize(request: SearchRequest = Body(...)):
@@ -237,17 +254,18 @@ async def search_and_summarize(request: SearchRequest = Body(...)):
     if vectorStore is None:
         # Check if it's None because startup failed or just not available
         if "vectorStore" not in app_state:
-             detail_msg = "Vector store failed to initialize during startup."
+            detail_msg = "Vector store failed to initialize during startup."
         else:
-             detail_msg = "Vector store is not available or not initialized."
+            detail_msg = "Vector store is not available or not initialized."
         raise HTTPException(status_code=503, detail=detail_msg)
 
     try:
         # 1. Search for relevant documents
-        docs = search_documents(request.query, k=request.k) # search_documents now uses app_state
+        # search_documents now uses app_state
+        docs = search_documents(request.query, k=request.k)
 
         if not docs:
-            context = "ไม่พบข้อมูลที่เกี่ยวข้องในเอกสาร" # Provide default context in Thai
+            context = "ไม่พบข้อมูลที่เกี่ยวข้องในเอกสาร"  # Provide default context in Thai
             summary = "ขออภัย ไม่พบข้อมูลที่เกี่ยวข้องกับคำถามของคุณในเอกสารที่มีอยู่"
         else:
             # 2. Prepare context
@@ -259,17 +277,19 @@ async def search_and_summarize(request: SearchRequest = Body(...)):
         return SearchResponse(
             query=request.query,
             summary=summary,
-            retrieved_context=context # Optionally return context
+            retrieved_context=context  # Optionally return context
         )
 
-    except ValueError as e: # Specific errors we raise
-         logging.error(f"Search Error (ValueError): {e}")
-         raise HTTPException(status_code=400, detail=str(e))
-    except HTTPException: # Re-raise HTTP exceptions
+    except ValueError as e:  # Specific errors we raise
+        logging.error(f"Search Error (ValueError): {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except HTTPException:  # Re-raise HTTP exceptions
         raise
     except Exception as e:
-        logging.error(f"Unhandled error during search/summary: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="An internal server error occurred.")
+        logging.error(
+            f"Unhandled error during search/summary: {e}", exc_info=True)
+        raise HTTPException(
+            status_code=500, detail="An internal server error occurred.")
 
 # --- Main Execution Block (for running directly, e.g., testing setup) ---
 if __name__ == "__main__":
@@ -282,4 +302,3 @@ if __name__ == "__main__":
 
     # Example using uvicorn programmatically (less common for production)
     # uvicorn.run(app, host="0.0.0.0", port=8000)
-
