@@ -17,6 +17,11 @@ A sample Kama Sutra RAG
 * [Kama Sutra RAG + ChromaDB](/rag_chromadb/)
 * [Kama Sutra RAG + ChromaDB + FastAPI](/rag_chromadb_api/)
 
+A sample Flutter App and Vertex AI
+
+* TODO: [Vertex AI App](/app_vertex/)
+* TODO: [Vertex AI RAG Engine](/app_vertex_rag/)
+
 Resources
 
 * [สร้าง AI Agent ด้วย Function Calling ของ Gemini](https://blog.redlinesoft.net/post/build-ai-agent-with-gemini-function-calling/)
