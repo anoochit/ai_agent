@@ -16,6 +16,7 @@ A sample Kama Sutra RAG
 * [Kama Sutra RAG + FAISS](/rag/)
 * [Kama Sutra RAG + ChromaDB](/rag_chromadb/)
 * [Kama Sutra RAG + ChromaDB + FastAPI](/rag_chromadb_api/)
+* [Kama Sutra RAG App](/app_rag/)
 
 A sample Flutter App and Vertex AI
 
