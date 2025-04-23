@@ -1,0 +1,22 @@
+{
+  "response": {
+    "candidates": [
+      {
+        "content": {
+          "parts": [{ "text": "สวัสดีค่ะ มีอะไรให้ช่วยวันนี้คะ? 😊" }],
+          "role": "model"
+        },
+        "finishReason": "STOP",
+        "avgLogprobs": -0.3179377147129604
+      }
+    ],
+    "modelVersion": "gemini-2.0-flash",
+    "usageMetadata": {
+      "promptTokenCount": 5,
+      "candidatesTokenCount": 14,
+      "totalTokenCount": 19,
+      "promptTokensDetails": [{ "modality": "TEXT", "tokenCount": 5 }],
+      "candidatesTokensDetails": [{ "modality": "TEXT", "tokenCount": 14 }]
+    }
+  }
+}
