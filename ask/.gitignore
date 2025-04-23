@@ -49,3 +49,5 @@ firebase*
 firestore*
 storage*
 apphosting*
+
+android/app/google-services.json
