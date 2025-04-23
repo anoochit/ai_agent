@@ -47,12 +47,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final TextEditingController questionController = TextEditingController();
+  final TextEditingController questionController = TextEditingController(
+    text: 'What is the weather in London?',
+  );
   String forcast = '';
 
   @override
   Widget build(BuildContext context) {
-    questionController.text = 'What is the weather in London?';
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -63,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Ask Weather Agent',
+              'Ask! Agent',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             SizedBox(height: 20),
@@ -73,18 +74,22 @@ class _MyHomePageState extends State<MyHomePage> {
                 controller: questionController,
                 textAlign: TextAlign.center,
                 decoration: const InputDecoration(
-                  hintText: 'What is the weather in London?',
+                  hintText: 'Enter your question',
                 ),
               ),
             ),
             SizedBox(height: 20),
+            ElevatedButton(onPressed: () => ask(), child: const Text('Ask!')),
+            SizedBox(height: 20),
             (forcast != '')
-                ? Text(
-                  forcast,
-                  style: Theme.of(context).textTheme.headlineSmall,
+                ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    forcast,
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
                 )
                 : Container(),
-            ElevatedButton(onPressed: () => ask(), child: const Text('Ask!')),
           ],
         ),
       ),
