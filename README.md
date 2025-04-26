@@ -20,8 +20,9 @@ A sample Kama Sutra RAG
 
 A sample Flutter App and Vertex AI
 
-* TODO: [Vertex AI Example](/app_vertex/)
-* TODO: [Vertex AI RAG Engine Example](/app_vertex_rag/)
+* TODO: [Vertex AI Example](/ask_vertex/)
+* TODO: [Vertex AI RAG Engine Example](/ask_vertex_rag/)
+* TODO: [Vertex AI MCP Example](/ask_vertex_mcp/)
 
 A sample A2A app
 
