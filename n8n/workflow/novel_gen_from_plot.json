@@ -1,36 +1,38 @@
 {
-  "name": "novel-generate-from-plot",
+  "name": "novel-gen-from-plot",
   "nodes": [
     {
       "parameters": {
-        "fileSelector": "D:/Projects/Novels/sweet_love/plots/*_*.md",
+        "fileSelector": "/files/plots/*_*.md",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -200,
-        30
+        -660,
+        260
       ],
-      "id": "ad2889ac-5cf2-404a-a73b-ae9c9ac689e1",
+      "id": "6c88619d-47a8-4137-a1f5-0a57e31984b1",
       "name": "Read/Write Files from Disk"
     },
     {
       "parameters": {
         "modelName": "models/gemini-2.0-flash",
-        "options": {}
+        "options": {
+          "temperature": 1
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        548,
-        0
+        100,
+        220
       ],
-      "id": "76de9a5d-2130-4d6c-a3e3-924d0a107d15",
+      "id": "63e34762-d287-4ea4-9d15-db500759c681",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "IrKJTc7DZRFulh6t",
+          "id": "o532atUZyQ1tHPyO",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -43,26 +45,26 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        20,
-        30
+        -440,
+        260
       ],
-      "id": "45f83e03-72f3-47a1-aff7-5cda05401c7c",
+      "id": "624bc7f9-3fd4-4efa-b515-d67b38bf059d",
       "name": "Extract from File"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "=D:/Projects/Novels/sweet_love/chapters/{{ $('Read/Write Files from Disk').item.json.fileName }}",
+        "fileName": "=/files/chapters/{{ $('Read/Write Files from Disk').item.json.fileName }}",
         "dataPropertyName": "data:{ $json.text }}",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        836,
-        180
+        380,
+        400
       ],
-      "id": "dde3c8c9-e25e-47ac-8db5-1d1565db6546",
+      "id": "7d141ab3-aac4-4cb0-a770-2855fd0776bf",
       "name": "Read/Write Files from Disk1"
     },
     {
@@ -77,10 +79,10 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        538,
-        180
+        80,
+        400
       ],
-      "id": "b09039c3-c312-45a5-8579-7fb4c685922b",
+      "id": "a7dbab72-4f80-4332-a2fb-2b7848301165",
       "name": "Convert to File"
     },
     {
@@ -88,10 +90,10 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -420,
-        30
+        -880,
+        260
       ],
-      "id": "321d67ed-5915-4dde-8376-5fd14d54dc33",
+      "id": "c2f083ec-47f2-40c1-96ea-5b1996b1a1ad",
       "name": "When clicking ‘Test workflow’"
     },
     {
@@ -101,10 +103,10 @@
       "type": "n8n-nodes-base.splitInBatches",
       "typeVersion": 3,
       "position": [
-        240,
-        30
+        -220,
+        260
       ],
-      "id": "86f9c16b-0e62-48bf-a976-c758faab27ed",
+      "id": "37513a3e-90be-4527-afc4-903a31f8397f",
       "name": "Loop Over Items"
     },
     {
@@ -114,7 +116,7 @@
         "messages": {
           "messageValues": [
             {
-              "message": "คุนเป็นนักเขียนนิยาย เรียบเรียงเนื้อหา โทน: โรแมนติก คงเนื้อหาเดิมไว้ และตั้งชื่อตอน\n\n{ชื่อตอน}\n\n{เนื้อหา}"
+              "message": "คุนเป็นนักเขียนนิยาย เรียบเรียงเนื้อหา โทน: โรแมนติก คงเนื้อหาเดิมไว้ และตั้งชื่อตอน \n\n##[ชื่อตอน]\n\n[เนื้อหา]"
             }
           ]
         }
@@ -122,27 +124,12 @@
       "type": "@n8n/n8n-nodes-langchain.chainLlm",
       "typeVersion": 1.6,
       "position": [
-        460,
-        -220
+        0,
+        0
       ],
-      "id": "9264fff0-6eef-4b55-ab39-52af08a20cc6",
+      "id": "8a6e0a8c-4680-4de0-830d-f7da7bdb8239",
       "name": "LLM Revise Chain",
       "alwaysOutputData": true
-    },
-    {
-      "parameters": {
-        "command": "=cd {{ $json.fileName.split(\"chapters\")[0] }}\npowershell -ExecutionPolicy Bypass -File gen.ps1\n"
-      },
-      "type": "n8n-nodes-base.executeCommand",
-      "typeVersion": 1,
-      "position": [
-        1056,
-        180
-      ],
-      "id": "0124b635-debe-4db8-896e-888a24490f0b",
-      "name": "Execute Command",
-      "alwaysOutputData": true,
-      "executeOnce": false
     }
   ],
   "pinData": {},
@@ -204,13 +191,7 @@
     },
     "Read/Write Files from Disk1": {
       "main": [
-        [
-          {
-            "node": "Execute Command",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     },
     "Loop Over Items": {
@@ -247,11 +228,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "854b3c68-218b-49a7-8497-86e3738bfb3e",
+  "versionId": "1f177877-7f9f-46a2-9a92-e0a19adcf719",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "535d0d78cde0671315b1828c772abe1ae6d3fd8d1375eafcaf991190831b8ff8"
+    "instanceId": "8c8eb350f67a3e20013b8b1f94901b9f05a22220551a5bf5b60e1e108f4978c6"
   },
-  "id": "KTa8gvHYNfUFPaYY",
+  "id": "kUP2HQqN1ee3eRA1",
   "tags": []
 }
