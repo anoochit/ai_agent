@@ -1,1 +1,3 @@
-files/chapters/*.md
+files/reports/*
+files/novel/build/*.md
+files/novel/chapters/*.md
