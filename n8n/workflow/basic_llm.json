@@ -1,0 +1,98 @@
+{
+  "name": "basic-llm",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "7880f808-f9cb-4f66-8598-bd610b91f55a",
+        "responseMode": "lastNode",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -280,
+        -100
+      ],
+      "id": "47ca52ba-46b0-47d9-8c95-47db3ce1a39b",
+      "name": "Webhook",
+      "webhookId": "7880f808-f9cb-4f66-8598-bd610b91f55a"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.keys()[0].parseJson()['prompt'] }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        -60,
+        -100
+      ],
+      "id": "6e9c6635-d5c6-4abb-a552-900801648491",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -160,
+        120
+      ],
+      "id": "5d5a7061-4cdc-4889-afdd-9958c8f707dd",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "FiccOCzFzqEv7tyi",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e1fd3090-0d66-432a-8f9b-cc8bad33c7dd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8c8eb350f67a3e20013b8b1f94901b9f05a22220551a5bf5b60e1e108f4978c6"
+  },
+  "id": "htvcp1manbMEIxEr",
+  "tags": []
+}

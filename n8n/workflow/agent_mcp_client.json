@@ -1,0 +1,115 @@
+{
+  "name": "agent-mcp-client",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -60,
+        -20
+      ],
+      "id": "34abcc4e-2763-4392-93bc-60820d30ba86",
+      "name": "When chat message received",
+      "webhookId": "d00bffee-d09a-4091-a57c-29cd693cfdfb"
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a helpful assistant\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        160,
+        -20
+      ],
+      "id": "b313662a-bf13-4e15-bd4c-797c26c566f5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        188,
+        200
+      ],
+      "id": "91d48595-bf2d-4794-b89d-632918255c22",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "o532atUZyQ1tHPyO",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sseEndpoint": "https://ddae-27-55-69-3.ngrok-free.app/sse"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        308,
+        200
+      ],
+      "id": "5244840d-f1b9-4ee8-b7f3-eae0fdb6e2a7",
+      "name": "MCP Client"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "473c984c-2099-4a4b-be3f-50f3b52fe4a4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8c8eb350f67a3e20013b8b1f94901b9f05a22220551a5bf5b60e1e108f4978c6"
+  },
+  "id": "iTp77PLuzJLH95XD",
+  "tags": []
+}

@@ -1,0 +1,468 @@
+{
+  "name": "meb-reports",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "delimiter": ",",
+          "relaxQuotes": true,
+          "readAsString": false
+        }
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        -180
+      ],
+      "id": "2af787df-135e-456e-8b6f-2d431a434ab5",
+      "name": "convert to json"
+    },
+    {
+      "parameters": {
+        "fileSelector": "D:/Projects/AIProject/reports/**/*.csv",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        -180
+      ],
+      "id": "23644b8d-3a6b-4572-9d4b-0f30c7a62aae",
+      "name": "read report files"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "count_จำนวน",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -180
+      ],
+      "id": "6d6835da-fbfe-45f2-bace-632dbed67dd9",
+      "name": "sort items"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "32af2483-2dbe-405f-9358-19f931696605",
+              "name": "﻿\"Book\"",
+              "value": "={{ $json['﻿\"Book\"'] }}",
+              "type": "string"
+            },
+            {
+              "id": "23e4d4a6-8307-47bb-97ff-45a42e120927",
+              "name": "จำนวน",
+              "value": "={{ $json['จำนวน'] }}",
+              "type": "number"
+            },
+            {
+              "id": "64c22ab4-3722-44cf-9029-6d015938d45e",
+              "name": "รายรับจริง (THB)",
+              "value": "={{ $json['รายรับจริง (THB)'] }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -200,
+        -180
+      ],
+      "id": "47726ecf-d1ab-485f-bd58-a725b8cc454c",
+      "name": "convert field type"
+    },
+    {
+      "parameters": {
+        "keys": {
+          "key": [
+            {
+              "currentKey": "'﻿Book'",
+              "newKey": "title"
+            },
+            {
+              "currentKey": "count_จำนวน",
+              "newKey": "qt"
+            },
+            {
+              "currentKey": "sum_รายรับจริง_(THB)",
+              "newKey": "amount"
+            }
+          ]
+        },
+        "additionalOptions": {}
+      },
+      "type": "n8n-nodes-base.renameKeys",
+      "typeVersion": 1,
+      "position": [
+        460,
+        -180
+      ],
+      "id": "12d44633-0aff-4776-af23-52c0d4796a90",
+      "name": "rename keys"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        -640,
+        160
+      ],
+      "id": "734a9136-0fdc-46fd-ad22-3b63817bcde0",
+      "name": "Merge",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -420,
+        160
+      ],
+      "id": "bc0b1126-eeb0-4218-aac3-8ad9955cf508",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "D:\\Projects\\AIProject\\reports\\summary.csv",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        160
+      ],
+      "id": "0609da7a-15b6-45d9-829a-69427e163f54",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -20,
+        380
+      ],
+      "id": "c683306a-eefe-47f7-a224-74ced26c256a",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IrKJTc7DZRFulh6t",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "response.text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        400,
+        160
+      ],
+      "id": "79ad41d9-9bde-4aef-96f5-d1ecdb97d5cc",
+      "name": "convert to report",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "D:\\Projects\\AIProject\\reports\\report.txt",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        640,
+        160
+      ],
+      "id": "043685eb-0ca2-4335-98f0-23771cd431a0",
+      "name": "Read/Write Files from Disk1"
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "sum",
+              "field": "รายรับจริง (THB)"
+            },
+            {
+              "field": "จำนวน"
+            }
+          ]
+        },
+        "fieldsToSplitBy": "['﻿\"Book\"']",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.summarize",
+      "typeVersion": 1.1,
+      "position": [
+        20,
+        -180
+      ],
+      "id": "65419bae-1932-4537-8af7-153f6841af36",
+      "name": "sale amount"
+    },
+    {
+      "parameters": {
+        "fieldsToSummarize": {
+          "values": [
+            {
+              "aggregation": "sum",
+              "field": "qt"
+            },
+            {
+              "aggregation": "sum",
+              "field": "amount"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.summarize",
+      "typeVersion": 1.1,
+      "position": [
+        -860,
+        160
+      ],
+      "id": "00c35472-be7b-47b2-99b9-6e5782ffb18f",
+      "name": "total sales"
+    },
+    {
+      "parameters": {
+        "operationMode": "nodeInputBinary",
+        "options": {
+          "binaryDataKey": "data",
+          "summarizationMethodAndPrompts": {
+            "values": {
+              "combineMapPrompt": "สรุปรายงานการขายหนังสือ จากข้อมูลนี้ :\n\n\n\"{text}\"\n\n\nสรุปโดยย่อ:\n\nสรุปแต่ละรายการเป็นตาราง:",
+              "prompt": "สรุปรายงานการขายหนังสือ จากข้อมูลนี้ :\n\n\n\"{text}\"\n\n\nสรุปโดยย่อ:\n\nสรุปแต่ละรายการเป็นตาราง:\n\n "
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainSummarization",
+      "typeVersion": 2,
+      "position": [
+        40,
+        160
+      ],
+      "id": "82975dfe-c216-43d3-b1c0-d3473ebcdc5c",
+      "name": "Summarization"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        -180
+      ],
+      "id": "83156c97-1365-4197-8db9-97186b69f449",
+      "name": "When clicking ‘Test workflow’"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "convert to json": {
+      "main": [
+        [
+          {
+            "node": "convert field type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "read report files": {
+      "main": [
+        [
+          {
+            "node": "convert to json",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sort items": {
+      "main": [
+        [
+          {
+            "node": "rename keys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "convert field type": {
+      "main": [
+        [
+          {
+            "node": "sale amount",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rename keys": {
+      "main": [
+        [
+          {
+            "node": "total sales",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Summarization",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Summarization",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "convert to report": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "sale amount": {
+      "main": [
+        [
+          {
+            "node": "sort items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "total sales": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Summarization": {
+      "main": [
+        [
+          {
+            "node": "convert to report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "read report files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "47216a43-6aba-444f-95c1-936c2746f7df",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "535d0d78cde0671315b1828c772abe1ae6d3fd8d1375eafcaf991190831b8ff8"
+  },
+  "id": "HiifDv70MoXZCyNt",
+  "tags": []
+}

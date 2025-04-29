@@ -1,0 +1,116 @@
+{
+  "name": "mcp-client",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b7888c5a-3236-4fb1-ae87-55d2aca48da1",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "connectionType": "sse",
+        "operation": "executeTool",
+        "toolName": "fetch_weather",
+        "toolParameters": "={\n  \"city\":\"{{ $json.city }}\"\n}"
+      },
+      "type": "n8n-nodes-mcp.mcpClient",
+      "typeVersion": 1,
+      "position": [
+        220,
+        0
+      ],
+      "id": "431abefc-a3a6-4648-a5a4-9f1937b54318",
+      "name": "MCP Client",
+      "credentials": {
+        "mcpClientSseApi": {
+          "id": "ZOyFMPu5iQnvvrTE",
+          "name": "local weather  sse"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "connectionType": "sse"
+      },
+      "type": "n8n-nodes-mcp.mcpClient",
+      "typeVersion": 1,
+      "position": [
+        0,
+        260
+      ],
+      "id": "9275b520-0f8f-4ec9-9be0-3c1e6415488a",
+      "name": "list tool",
+      "credentials": {
+        "mcpClientSseApi": {
+          "id": "ZOyFMPu5iQnvvrTE",
+          "name": "local weather  sse"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "result.content[0].text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "id": "62189ca7-f6d0-40cf-ad2c-873eed26b135",
+      "name": "Convert to File"
+    }
+  ],
+  "pinData": {
+    "When clicking ‘Test workflow’": [
+      {
+        "json": {
+          "city": "bangkok"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "MCP Client",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "14cfd38e-00b9-406c-ad24-8126d098d2a0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8c8eb350f67a3e20013b8b1f94901b9f05a22220551a5bf5b60e1e108f4978c6"
+  },
+  "id": "NdnN1loKq37D7APE",
+  "tags": []
+}

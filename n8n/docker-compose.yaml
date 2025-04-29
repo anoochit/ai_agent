@@ -1,10 +1,9 @@
 services:
   traefik:
-    image: "traefik"
+    image: "traefik:v2.11" # Pinned to a specific version for stability
     restart: always
     command:
-      - "--api=true"
-      - "--api.insecure=true"
+      - "--api.insecure=true" # Consider securing the API dashboard with authentication
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
@@ -14,45 +13,137 @@ services:
       - "--certificatesresolvers.mytlschallenge.acme.tlschallenge=true"
       - "--certificatesresolvers.mytlschallenge.acme.email=${SSL_EMAIL}"
       - "--certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json"
+      # Consider adding log level for debugging if needed: --log.level=DEBUG
     ports:
       - "80:80"
       - "443:443"
+      # - "8080:8080" # Expose Traefik dashboard if needed (and secure it)
     volumes:
       - traefik_data:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - internal_network
+    # Add labels for Traefik dashboard if you uncomment port 8080
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN_NAME}`)" # Use your domain
+    #   - "traefik.http.routers.traefik.entrypoints=websecure"
+    #   - "traefik.http.routers.traefik.tls.certresolver=mytlschallenge"
+    #   - "traefik.http.routers.traefik.service=api@internal"
+    #   # Add basic auth middleware for security
+    #   - "traefik.http.routers.traefik.middlewares=traefik-auth"
+    #   - "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_USER}:${TRAEFIK_PASSWORD_HASH}" # Generate hash with htpasswd
 
   n8n:
-    image: docker.n8n.io/n8nio/n8n:next
+    image: docker.n8n.io/n8nio/n8n:latest # Consider pinning to a specific n8n version
     restart: always
-    ports:
-      - "127.0.0.1:5678:5678"
     labels:
       - traefik.enable=true
-      - traefik.http.routers.n8n.rule=Host(`${SUBDOMAIN}.${DOMAIN_NAME}`) 
+      - traefik.http.routers.n8n.rule=Host(`${SUBDOMAIN}.${DOMAIN_NAME}`)
+      - traefik.http.routers.n8n.entrypoints=websecure
       - traefik.http.routers.n8n.tls=true
-      - traefik.http.routers.n8n.entrypoints=web,websecure
       - traefik.http.routers.n8n.tls.certresolver=mytlschallenge
-      - traefik.http.middlewares.n8n.headers.SSLRedirect=true
-      - traefik.http.middlewares.n8n.headers.STSSeconds=315360000
-      - traefik.http.middlewares.n8n.headers.browserXSSFilter=true
-      - traefik.http.middlewares.n8n.headers.contentTypeNosniff=true
-      - traefik.http.middlewares.n8n.headers.forceSTSHeader=true
-      - traefik.http.middlewares.n8n.headers.SSLHost=${DOMAIN_NAME}
-      - traefik.http.middlewares.n8n.headers.STSIncludeSubdomains=true
-      - traefik.http.middlewares.n8n.headers.STSPreload=true
-      - traefik.http.routers.n8n.middlewares=n8n@docker
+      - traefik.http.routers.n8n.middlewares=n8n-secure-headers@docker
+      - traefik.http.middlewares.n8n-secure-headers.headers.STSSeconds=315360000
+      - traefik.http.middlewares.n8n-secure-headers.headers.browserXSSFilter=true
+      - traefik.http.middlewares.n8n-secure-headers.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.n8n-secure-headers.headers.forceSTSHeader=true
+      - traefik.http.middlewares.n8n-secure-headers.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.n8n-secure-headers.headers.STSPreload=true
+      # Removed redundant SSLRedirect as entrypoint handles it
+      - traefik.http.services.n8n.loadbalancer.server.port=5678
     environment:
-      # - N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}
-      - N8N_HOST=${DOMAIN_NAME}
+      - N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
       - NODE_ENV=production
       - WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      # --- Database Configuration ---
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres # Service name of the postgres container
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB} # From .env
+      - DB_POSTGRESDB_USER=${POSTGRES_USER} # From .env
+      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD} # From .env
+      # Optional: Add SSL connection to DB if needed and configured on Postgres
+      # - DB_POSTGRESDB_SSL_REJECT_UNAUTHORIZED=false # Set to true if using trusted certs
+      # - DB_POSTGRESDB_SSL_CA_CERT= # Path to CA cert if needed
+      # - DB_POSTGRESDB_SSL_KEY= # Path to client key if needed
+      # - DB_POSTGRESDB_SSL_CERT= # Path to client cert if needed
     volumes:
       - n8n_data:/home/node/.n8n
-      - ./files:/files
+      - ./files:/files # Consider using a named volume 'n8n_files:/files'
+    networks:
+      - internal_network
+    depends_on: # Ensure postgres starts before n8n
+      - postgres
+
+  minio:
+    image: minio/minio:latest # Consider pinning version
+    restart: always
+    command: server /data --console-address ":9001"
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+      # Optional: Set domain for presigned URLs if needed by clients
+      # - MINIO_SERVER_URL=https://minio.${DOMAIN_NAME}
+      # - MINIO_BROWSER_REDIRECT_URL=https://minio-console.${DOMAIN_NAME}
+    volumes:
+      - minio_data:/data
+    labels:
+      - traefik.enable=true
+      # Router for MinIO API (S3)
+      - traefik.http.routers.minio-api.rule=Host(`minio.${DOMAIN_NAME}`)
+      - traefik.http.routers.minio-api.entrypoints=websecure
+      - traefik.http.routers.minio-api.tls.certresolver=mytlschallenge
+      - traefik.http.routers.minio-api.service=minio-api-svc
+      - traefik.http.services.minio-api-svc.loadbalancer.server.port=9000
+
+      # Router for MinIO Console (Web UI)
+      - traefik.http.routers.minio-console.rule=Host(`minio-console.${DOMAIN_NAME}`)
+      - traefik.http.routers.minio-console.entrypoints=websecure
+      - traefik.http.routers.minio-console.tls.certresolver=mytlschallenge
+      - traefik.http.routers.minio-console.service=minio-console-svc
+      - traefik.http.services.minio-console-svc.loadbalancer.server.port=9001
+    networks:
+      - internal_network
+    healthcheck:
+      # Use mc installed within the minio image for healthcheck
+      test: ["CMD-SHELL", "mc alias set health http://localhost:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD} && mc ready health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  postgres: # Added PostgreSQL service
+    image: postgres:15 # Pinned to a specific major version
+    restart: always
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB} # From .env
+      - POSTGRES_USER=${POSTGRES_USER} # From .env
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD} # From .env
+      # Optional: Set timezone to match n8n/host
+      - TZ=${GENERIC_TIMEZONE}
+      - PGTZ=${GENERIC_TIMEZONE}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persist data
+    networks:
+      - internal_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   n8n_data:
   traefik_data:
+  minio_data:
+  postgres_data: # Added volume for postgres
+
+networks:
+  internal_network:
+    driver: bridge
+    # Consider adding name for easier external management if needed
+    # name: myapp_internal_network

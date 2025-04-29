@@ -1,0 +1,257 @@
+{
+  "name": "novel-generate-from-plot",
+  "nodes": [
+    {
+      "parameters": {
+        "fileSelector": "D:/Projects/Novels/sweet_love/plots/*_*.md",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        30
+      ],
+      "id": "ad2889ac-5cf2-404a-a73b-ae9c9ac689e1",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        548,
+        0
+      ],
+      "id": "76de9a5d-2130-4d6c-a3e3-924d0a107d15",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "IrKJTc7DZRFulh6t",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        20,
+        30
+      ],
+      "id": "45f83e03-72f3-47a1-aff7-5cda05401c7c",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=D:/Projects/Novels/sweet_love/chapters/{{ $('Read/Write Files from Disk').item.json.fileName }}",
+        "dataPropertyName": "data:{ $json.text }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        836,
+        180
+      ],
+      "id": "dde3c8c9-e25e-47ac-8db5-1d1565db6546",
+      "name": "Read/Write Files from Disk1"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "text",
+        "binaryPropertyName": "=data:{ $json.text }}",
+        "options": {
+          "encoding": "utf8"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        538,
+        180
+      ],
+      "id": "b09039c3-c312-45a5-8579-7fb4c685922b",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        30
+      ],
+      "id": "321d67ed-5915-4dde-8376-5fd14d54dc33",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        240,
+        30
+      ],
+      "id": "86f9c16b-0e62-48bf-a976-c758faab27ed",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "คุนเป็นนักเขียนนิยาย เรียบเรียงเนื้อหา โทน: โรแมนติก คงเนื้อหาเดิมไว้ และตั้งชื่อตอน\n\n{ชื่อตอน}\n\n{เนื้อหา}"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.6,
+      "position": [
+        460,
+        -220
+      ],
+      "id": "9264fff0-6eef-4b55-ab39-52af08a20cc6",
+      "name": "LLM Revise Chain",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "command": "=cd {{ $json.fileName.split(\"chapters\")[0] }}\npowershell -ExecutionPolicy Bypass -File gen.ps1\n"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1056,
+        180
+      ],
+      "id": "0124b635-debe-4db8-896e-888a24490f0b",
+      "name": "Execute Command",
+      "alwaysOutputData": true,
+      "executeOnce": false
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "LLM Revise Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk1": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "LLM Revise Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LLM Revise Chain": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "854b3c68-218b-49a7-8497-86e3738bfb3e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "535d0d78cde0671315b1828c772abe1ae6d3fd8d1375eafcaf991190831b8ff8"
+  },
+  "id": "KTa8gvHYNfUFPaYY",
+  "tags": []
+}
