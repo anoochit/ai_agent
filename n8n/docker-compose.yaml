@@ -76,7 +76,8 @@ services:
       - ./files:/files # Consider using a named volume 'n8n_files:/files'
     networks:
       - internal_network
-    depends_on: # Ensure postgres starts before n8n
+    depends_on:
+      # Ensure postgres starts before n8n
       - postgres
 
   minio:
@@ -110,13 +111,14 @@ services:
       - internal_network
     healthcheck:
       # Use mc installed within the minio image for healthcheck
-      test: ["CMD-SHELL", "mc alias set health http://localhost:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD} && mc ready health"]
+      test: [ "CMD-SHELL", "mc alias set health http://localhost:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD} && mc ready health" ]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
 
-  postgres: # Added PostgreSQL service
+  postgres:
+    # Added PostgreSQL service
     image: postgres:15 # Pinned to a specific major version
     restart: always
     environment:
@@ -131,16 +133,42 @@ services:
     networks:
       - internal_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest # Consider pinning to a specific version, e.g., dpage/pgadmin4:8
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL} # Set in .env file
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD} # Set in .env file
+      # Optional: Set theme, configure other settings
+      # - PGADMIN_CONFIG_SERVER_MODE=False # Set to True if you don't want users creating servers
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin # Persist pgAdmin configuration and server list
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.pgadmin.rule=Host(`pgadmin.${DOMAIN_NAME}`) # Use your domain
+      - traefik.http.routers.pgadmin.entrypoints=websecure
+      - traefik.http.routers.pgadmin.tls.certresolver=mytlschallenge
+      - traefik.http.routers.pgadmin.service=pgadmin-svc
+      - traefik.http.services.pgadmin-svc.loadbalancer.server.port=80 # pgAdmin listens on port 80 internally
+      # Optional: Add security headers like for n8n if desired
+      # - traefik.http.routers.pgadmin.middlewares=n8n-secure-headers@docker
+    networks:
+      - internal_network
+    depends_on:
+      - postgres # Ensure postgres is running before pgadmin starts
 
 volumes:
   n8n_data:
   traefik_data:
   minio_data:
-  postgres_data: # Added volume for postgres
+  postgres_data:
+  pgadmin_data:
+
 
 networks:
   internal_network:
