@@ -160,7 +160,6 @@ class _HomePageState extends State<HomePage> {
     if (result != null) {
       setState(() {
         _resultFunctionCall = result;
-        // _isLoading = false;
       });
     }
   }
