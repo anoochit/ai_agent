@@ -2,11 +2,11 @@
 
 #A sample Gemini app
 
-* [Gemini App](/app/)
+* [Gemini App](/ask_gemini/)
 
 A sample AI Agent Gemini with MCP Server SSE
 
-* [Ask! Agent](/ask/)
+* [Ask! Agent](/ask_agent_mcp/)
 * [MCP Client](/mcp_client/)
 * [MCP Server - OpenWeatherMap and BMI Calculator](/mcp_server/)
 * [CLI Agent](/mcp_host/)
