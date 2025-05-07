@@ -1,0 +1,93 @@
+[
+  {
+    "content": {
+      "parts": [
+        {
+          "text": "A hyperrealistic close-up photograph of a black-necked spitting cobra coiled defensively on a sun-drenched, weathered branch of a desert acacia tree. The snake's iridescent black scales gleam under the harsh sunlight, with intricate patterns visible upon close inspection. The branch is rough and textured, showing signs of extreme heat and dryness. The background is a blurred expanse of undulating sand dunes stretching to the horizon under a scorching sun, creating a sense of vastness and isolation. The lighting is intense, casting sharp, contrasting shadows and emphasizing the snake's alert posture and the threat of its venomous spit. The focus is razor-sharp on the snake's head, particularly its eyes and the distinctive black band around its neck, conveying a sense of danger and primal survival.\n"
+        }
+      ],
+      "role": "model"
+    },
+    "invocation_id": "e-2f83568b-8968-4c07-a43c-ee166d8e1487",
+    "author": "imagine_agent",
+    "actions": {
+      "state_delta": {
+        "detailed_prompt": "A hyperrealistic close-up photograph of a black-necked spitting cobra coiled defensively on a sun-drenched, weathered branch of a desert acacia tree. The snake's iridescent black scales gleam under the harsh sunlight, with intricate patterns visible upon close inspection. The branch is rough and textured, showing signs of extreme heat and dryness. The background is a blurred expanse of undulating sand dunes stretching to the horizon under a scorching sun, creating a sense of vastness and isolation. The lighting is intense, casting sharp, contrasting shadows and emphasizing the snake's alert posture and the threat of its venomous spit. The focus is razor-sharp on the snake's head, particularly its eyes and the distinctive black band around its neck, conveying a sense of danger and primal survival.\n"
+      },
+      "artifact_delta": {},
+      "requested_auth_configs": {}
+    },
+    "id": "UPuS2Iqn",
+    "timestamp": 1746622451.644628
+  },
+  {
+    "content": {
+      "parts": [
+        {
+          "functionCall": {
+            "id": "adk-a549dfd2-19a2-4597-8b80-0104249f2cda",
+            "args": {
+              "detailed_prompt": "A hyperrealistic close-up photograph of a black-necked spitting cobra coiled defensively on a sun-drenched, weathered branch of a desert acacia tree. The snake's iridescent black scales gleam under the harsh sunlight, with intricate patterns visible upon close inspection. The branch is rough and textured, showing signs of extreme heat and dryness. The background is a blurred expanse of undulating sand dunes stretching to the horizon under a scorching sun, creating a sense of vastness and isolation. The lighting is intense, casting sharp, contrasting shadows and emphasizing the snake's alert posture and the threat of its venomous spit. The focus is razor-sharp on the snake's head, particularly its eyes and the distinctive black band around its neck, conveying a sense of danger and primal survival."
+            },
+            "name": "painter_tool"
+          }
+        }
+      ],
+      "role": "model"
+    },
+    "invocation_id": "e-2f83568b-8968-4c07-a43c-ee166d8e1487",
+    "author": "painter_agent",
+    "actions": {
+      "state_delta": {},
+      "artifact_delta": {},
+      "requested_auth_configs": {}
+    },
+    "long_running_tool_ids": [],
+    "id": "DRz00Aou",
+    "timestamp": 1746622454.99111
+  },
+  {
+    "content": {
+      "parts": [
+        {
+          "functionResponse": {
+            "id": "adk-a549dfd2-19a2-4597-8b80-0104249f2cda",
+            "name": "painter_tool",
+            "response": {
+              "result": "generated/stability_image_98fe827a-ea46-4cb4-94bd-767bd6580625.png"
+            }
+          }
+        }
+      ],
+      "role": "user"
+    },
+    "invocation_id": "e-2f83568b-8968-4c07-a43c-ee166d8e1487",
+    "author": "painter_agent",
+    "actions": {
+      "state_delta": {},
+      "artifact_delta": {},
+      "requested_auth_configs": {}
+    },
+    "id": "C1OolSZH",
+    "timestamp": 1746622471.524981
+  },
+  {
+    "content": {
+      "parts": [
+        {
+          "text": "I've generated a hyperrealistic image of a black-necked spitting cobra coiled on a branch in the desert. You can find it here: generated/stability_image_98fe827a-ea46-4cb4-94bd-767bd6580625.png\n"
+        }
+      ],
+      "role": "model"
+    },
+    "invocation_id": "e-2f83568b-8968-4c07-a43c-ee166d8e1487",
+    "author": "painter_agent",
+    "actions": {
+      "state_delta": {},
+      "artifact_delta": {},
+      "requested_auth_configs": {}
+    },
+    "id": "kB32cHpA",
+    "timestamp": 1746622471.524981
+  }
+]

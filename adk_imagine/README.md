@@ -29,7 +29,7 @@ curl -X POST http://127.0.0.1:8000/run \
 "new_message": {
     "role": "user",
     "parts": [{
-    "text": "Leonado Davinci self portrait in golden frame"
+    "text": "black sneck roll on a branch of tree in the desert within sun light"
     }]
 }
 }'

@@ -24,9 +24,9 @@ A sample Flutter App and Vertex AI
 * TODO: [Vertex AI RAG Engine Example](/ask_vertex_rag/)
 * TODO: [Vertex AI MCP Example](/ask_vertex_mcp/)
 
-A sample A2A app
+A sample Agent app
 
-* TODO: [A2A Example](/app_a2a/)
+* [Imagine Agent](/adk_imagine/)
 
 Resources
 

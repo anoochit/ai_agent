@@ -12,7 +12,7 @@ SESSION_DB_URL = "sqlite:///./sessions.db"
 # Example allowed origins for CORS
 ALLOWED_ORIGINS = ["http://localhost", "http://localhost:8080", "*"]
 # Set web=True if you intend to serve a web interface, False otherwise
-SERVE_WEB_INTERFACE = True
+SERVE_WEB_INTERFACE = False
 
 # Call the function to get the FastAPI app instance
 # Ensure the agent directory name ('capital_agent') matches your agent folder

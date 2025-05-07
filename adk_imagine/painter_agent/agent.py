@@ -1,9 +1,9 @@
 from google.adk.agents import Agent
 import os
 import uuid
-import requests 
+import requests
 
-# --- Configuration --- 
+# --- Configuration ---
 # Ensure this environment variable is set before running the agent
 STABILITY_AI_API_KEY = os.getenv("STABILITY_AI_API_KEY")
 
@@ -74,9 +74,9 @@ def painter_tool(detailed_prompt: str) -> dict:
             print(f"Stability AI image saved as '{file_path}'.")
             return {
                 # 'result' : f"Successfully generated image with Stability AI and saved it as '{file_path}' based on the description: '{cleaned_prompt}'.",
-                'result' : GENERATED_FOLDER + '/' + file_name
+                'result': GENERATED_FOLDER + '/' + file_name
             }
-            # return f"Successfully generated image with Stability AI and saved it as '{file_path}' based on the description: '{cleaned_prompt}'."
+
         else:
             # Attempt to parse JSON error, otherwise use text
             try:
@@ -86,22 +86,20 @@ def painter_tool(detailed_prompt: str) -> dict:
             print(
                 f"Error from Stability AI API: {answers.status_code} - {error_details}")
             return {
-                'result' : f"Image generation failed for '{cleaned_prompt}'. Status: {answers.status_code}, Details: {error_details}"
+                'result': f"Image generation failed for '{cleaned_prompt}'. Status: {answers.status_code}, Details: {error_details}"
             }
-            # return f"Image generation failed for '{cleaned_prompt}'. Status: {answers.status_code}, Details: {error_details}"
 
     except Exception as e:
         print(f"Error during Stability AI image generation: {e}")
         return {
-            'result' : "An error occurred while trying to generate the image with Stability AI for '{cleaned_prompt}'. Error: {e}"
+            'result': "An error occurred while trying to generate the image with Stability AI for '{cleaned_prompt}'. Error: {e}"
         }
-        
-        # return f"An error occurred while trying to generate the image with Stability AI for '{cleaned_prompt}'. Error: {e}"
+
 
 painter_agent = Agent(
     name="painter_agent",
     model="gemini-2.0-flash",
     description="An agent that generates images based on text descriptions using Stability AI.",
-    instruction="You are a helpful image generation assistant. Use the painter_tool to create an image based on the user's description. Provide the user with confirmation and the filename of the saved image upon success.",
+    instruction="You are a helpful image generation assistant. Use the painter_tool to create an image based on the user's description. Provide the user with confirmation and the filename of the saved image upon success. Example: 'stability_image_12345.png'",
     tools=[painter_tool]
 )
