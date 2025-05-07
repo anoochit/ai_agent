@@ -1,6 +1,6 @@
 # AI Agent App
 
-#A sample Gemini app
+A sample Gemini app
 
 * [Gemini App](/ask_gemini/)
 
