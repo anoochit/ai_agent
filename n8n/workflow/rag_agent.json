@@ -1,0 +1,417 @@
+{
+  "name": "rag agent",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        -320
+      ],
+      "id": "f4943908-7768-4f27-946a-2406c668239f",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": "documents",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.1,
+      "position": [
+        156,
+        -320
+      ],
+      "id": "bcf69f88-1e4f-4372-bf3e-534c4e7bf762",
+      "name": "Postgres PGVector Store",
+      "alwaysOutputData": true,
+      "executeOnce": false,
+      "credentials": {
+        "postgres": {
+          "id": "O0OegfK1zycT9UkY",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/text-embedding-004"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        140,
+        -100
+      ],
+      "id": "3cb84187-d8a0-4137-962e-4c05af3ad258",
+      "name": "Embeddings Google Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "o532atUZyQ1tHPyO",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        260,
+        -97.5
+      ],
+      "id": "8519a61e-9245-4c60-a061-833bfe1bb889",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        348,
+        100
+      ],
+      "id": "2a37a24a-01b7-478f-89db-2bfc832ae509",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "fileSelector": "/files/data/pg345.txt",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        -320
+      ],
+      "id": "0c797a03-e5f1-4a7e-9acc-1a55f34d2ecc",
+      "name": "Read/Write Files from Disk"
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -320
+      ],
+      "id": "4109c823-741f-42ef-a605-016ba8b21679",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        520,
+        -320
+      ],
+      "id": "d8b8785b-bd47-4c4f-912f-920982493381",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "content": "# Load document and store document",
+        "height": 700,
+        "width": 1380
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -620,
+        -420
+      ],
+      "typeVersion": 1,
+      "id": "386cc4dc-e185-401b-825c-16e1e998c1dc",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -520,
+        420
+      ],
+      "id": "f70b39b5-89c2-404f-ba48-6f697769ff6b",
+      "name": "When chat message received",
+      "webhookId": "0e31e68f-8c5e-412f-99a7-2941af390e6d"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {
+          "safetySettings": {
+            "values": [
+              {
+                "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                "threshold": "BLOCK_NONE"
+              },
+              {
+                "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                "threshold": "BLOCK_NONE"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        640
+      ],
+      "id": "f120f30f-7f8a-4eb4-a6c7-34e0200e94a7",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "o532atUZyQ1tHPyO",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are an AI assistant.  Use 'vector_database' to search data in database and summary  knowledge from Context to help answer user questions."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.9,
+      "position": [
+        -268,
+        420
+      ],
+      "id": "e161e61e-9da4-4cd2-a6e5-c1a851745d2a",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/text-embedding-004"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        28,
+        840
+      ],
+      "id": "e2330b63-6a84-427d-af1c-0607d447bee3",
+      "name": "Embeddings Google Gemini1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "o532atUZyQ1tHPyO",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Agent RAG",
+        "height": 700,
+        "width": 1100
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -620,
+        320
+      ],
+      "typeVersion": 1,
+      "id": "64120ed8-8947-471a-af37-2908cab02094",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolName": "vector_database",
+        "toolDescription": "work with vector data in database",
+        "tableName": "documents",
+        "topK": 3,
+        "options": {
+          "distanceStrategy": "cosine"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1.1,
+      "position": [
+        -60,
+        642.5
+      ],
+      "id": "495c3b5d-0660-42a1-bf3a-204b54db062f",
+      "name": "vector databsae",
+      "credentials": {
+        "postgres": {
+          "id": "O0OegfK1zycT9UkY",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -180,
+        640
+      ],
+      "id": "9a832e61-9087-4009-b813-b85e21a5e40e",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read/Write Files from Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read/Write Files from Disk": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Postgres PGVector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres PGVector Store": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "vector databsae",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "vector databsae": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "101df389-23bd-407c-80f4-a1a01b65165b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8c8eb350f67a3e20013b8b1f94901b9f05a22220551a5bf5b60e1e108f4978c6"
+  },
+  "id": "NzKllFgvwVxyzBXa",
+  "tags": []
+}
