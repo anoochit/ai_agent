@@ -1,7 +1,12 @@
 from google.adk.agents import Agent
 import os
 import uuid
+from opik import track
 import requests
+
+from opik.integrations.adk import OpikTracer
+
+opik_tracer = OpikTracer()
 
 # --- Configuration ---
 # Ensure this environment variable is set before running the agent
@@ -101,5 +106,11 @@ painter_agent = Agent(
     model="gemini-2.0-flash",
     description="An agent that generates images based on text descriptions using Stability AI.",
     instruction="You are a helpful image generation assistant. Use the painter_tool to create an image based on the user's description. Provide the user with confirmation and the filename of the saved image upon success. Example: 'stability_image_12345.png'",
-    tools=[painter_tool]
+    tools=[painter_tool],
+    before_agent_callback=opik_tracer.before_agent_callback,
+    after_agent_callback=opik_tracer.after_agent_callback,
+    before_model_callback=opik_tracer.before_model_callback,
+    after_model_callback=opik_tracer.after_model_callback,
+    before_tool_callback=opik_tracer.before_tool_callback,
+    after_tool_callback=opik_tracer.after_tool_callback,
 )
