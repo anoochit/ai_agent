@@ -1,8 +1,7 @@
 from google.adk.agents import Agent
 
-from opik.integrations.adk import OpikTracer
-
-opik_tracer = OpikTracer()
+# from opik.integrations.adk import OpikTracer
+# opik_tracer = OpikTracer()
 
 AGENT_INSTRUCTION = """ 
 Your primary role is to transform a user's initial, often simple, prompt for an AI image generation model into a highly detailed and descriptive prompt. This 'detailed_prompt' will then be used to generate an image.
@@ -53,11 +52,11 @@ imagine_agent = Agent(
     description="Refine user's prompt for an AI image generation model.",
     instruction=AGENT_INSTRUCTION,
     output_key='detailed_prompt',
-    before_agent_callback=opik_tracer.before_agent_callback,
-    after_agent_callback=opik_tracer.after_agent_callback,
-    before_model_callback=opik_tracer.before_model_callback,
-    after_model_callback=opik_tracer.after_model_callback,
-    before_tool_callback=opik_tracer.before_tool_callback,
-    after_tool_callback=opik_tracer.after_tool_callback,
+    # before_agent_callback=opik_tracer.before_agent_callback,
+    # after_agent_callback=opik_tracer.after_agent_callback,
+    # before_model_callback=opik_tracer.before_model_callback,
+    # after_model_callback=opik_tracer.after_model_callback,
+    # before_tool_callback=opik_tracer.before_tool_callback,
+    # after_tool_callback=opik_tracer.after_tool_callback,
 
 )
