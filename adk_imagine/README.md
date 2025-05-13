@@ -29,7 +29,7 @@ curl -X POST http://127.0.0.1:8000/run \
 "new_message": {
     "role": "user",
     "parts": [{
-    "text": "black sneck roll on a branch of tree in the desert within sun light"
+    "text": "a lizard walking on a dry branch tree  in the desert on the dawn of the sun light"
     }]
 }
 }'

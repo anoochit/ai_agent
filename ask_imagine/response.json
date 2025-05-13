@@ -1,0 +1,93 @@
+[
+  {
+    "content": {
+      "parts": [
+        {
+          "text": "\"A captivating, photorealistic image of a desert lizard carefully traversing a parched, sun-bleached branch of a desert tree at dawn. The lizard's scales display intricate patterns and earthy tones, blending seamlessly with the arid environment. The branch is gnarled and weathered, with cracks and fissures that speak to its age and resilience. The background features a sprawling desert landscape bathed in the warm, golden light of the rising sun, casting long shadows and creating a sense of vastness and tranquility. The lighting is soft and diffused, highlighting the lizard's form and the textures of the branch. A wide shot captures the overall scene, emphasizing the lizard's small size in comparison to the expansive desert.\"\n"
+        }
+      ],
+      "role": "model"
+    },
+    "invocation_id": "e-07ece210-987d-44be-9040-cf57184817f4",
+    "author": "imagine_agent",
+    "actions": {
+      "state_delta": {
+        "detailed_prompt": "\"A captivating, photorealistic image of a desert lizard carefully traversing a parched, sun-bleached branch of a desert tree at dawn. The lizard's scales display intricate patterns and earthy tones, blending seamlessly with the arid environment. The branch is gnarled and weathered, with cracks and fissures that speak to its age and resilience. The background features a sprawling desert landscape bathed in the warm, golden light of the rising sun, casting long shadows and creating a sense of vastness and tranquility. The lighting is soft and diffused, highlighting the lizard's form and the textures of the branch. A wide shot captures the overall scene, emphasizing the lizard's small size in comparison to the expansive desert.\"\n"
+      },
+      "artifact_delta": {},
+      "requested_auth_configs": {}
+    },
+    "id": "GDFMiFI7",
+    "timestamp": 1747106173.239721
+  },
+  {
+    "content": {
+      "parts": [
+        {
+          "functionCall": {
+            "id": "adk-fbede842-91e2-4763-a94f-6eccf6b95928",
+            "args": {
+              "detailed_prompt": "A captivating, photorealistic image of a desert lizard carefully traversing a parched, sun-bleached branch of a desert tree at dawn. The lizard's scales display intricate patterns and earthy tones, blending seamlessly with the arid environment. The branch is gnarled and weathered, with cracks and fissures that speak to its age and resilience. The background features a sprawling desert landscape bathed in the warm, golden light of the rising sun, casting long shadows and creating a sense of vastness and tranquility. The lighting is soft and diffused, highlighting the lizard's form and the textures of the branch. A wide shot captures the overall scene, emphasizing the lizard's small size in comparison to the expansive desert."
+            },
+            "name": "painter_tool"
+          }
+        }
+      ],
+      "role": "model"
+    },
+    "invocation_id": "e-07ece210-987d-44be-9040-cf57184817f4",
+    "author": "painter_agent",
+    "actions": {
+      "state_delta": {},
+      "artifact_delta": {},
+      "requested_auth_configs": {}
+    },
+    "long_running_tool_ids": [],
+    "id": "CpfpWSq0",
+    "timestamp": 1747106175.245253
+  },
+  {
+    "content": {
+      "parts": [
+        {
+          "functionResponse": {
+            "id": "adk-fbede842-91e2-4763-a94f-6eccf6b95928",
+            "name": "painter_tool",
+            "response": {
+              "result": "generated/stability_image_6da86c23-98b8-4407-bd63-dfae7a4355ed.png"
+            }
+          }
+        }
+      ],
+      "role": "user"
+    },
+    "invocation_id": "e-07ece210-987d-44be-9040-cf57184817f4",
+    "author": "painter_agent",
+    "actions": {
+      "state_delta": {},
+      "artifact_delta": {},
+      "requested_auth_configs": {}
+    },
+    "id": "qjR28bA1",
+    "timestamp": 1747106192.827913
+  },
+  {
+    "content": {
+      "parts": [
+        {
+          "text": "I've generated an image of a lizard walking on a dry branch in the desert at dawn. You can find it here: generated/stability_image_6da86c23-98b8-4407-bd63-dfae7a4355ed.png\n"
+        }
+      ],
+      "role": "model"
+    },
+    "invocation_id": "e-07ece210-987d-44be-9040-cf57184817f4",
+    "author": "painter_agent",
+    "actions": {
+      "state_delta": {},
+      "artifact_delta": {},
+      "requested_auth_configs": {}
+    },
+    "id": "2MCZNP5b",
+    "timestamp": 1747106192.83795
+  }
+]
