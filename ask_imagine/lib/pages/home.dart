@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
 
   // final prompt = 'White tiger laying down on the rock';
   final prompt =
-      'a red lizard walking on a branch tree  in the forest on the dawn of the sun light';
+      'a comodo lizard walking on a tree column in the forest on the dawn of the sun light';
 
   bool isLoading = false;
 
@@ -34,43 +34,47 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Imagine')),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // input form
-          Form(
-            key: formKey,
-            child: TextFormField(
-              controller: promptTextController,
-              decoration: InputDecoration(hintText: 'Enter your idea ...'),
-              enabled: (!isLoading),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Enter your idea';
-                }
-                return null;
-              },
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // input form
+            Form(
+              key: formKey,
+              child: TextFormField(
+                controller: promptTextController,
+                decoration: InputDecoration(hintText: 'Enter your idea ...'),
+                enabled: (!isLoading),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter your idea';
+                  }
+                  return null;
+                },
+                maxLines: null,
+                minLines: 2,
+              ),
             ),
-          ),
-          FilledButton(
-            onPressed: (!isLoading) ? () => buildImage() : null,
-            child: Text('Let\'s Imagine!'),
-          ),
+            FilledButton(
+              onPressed: (!isLoading) ? () => buildImage() : null,
+              child: Text('Let\'s Imagine!'),
+            ),
 
-          // log message
-          Text(error),
+            // log message
+            Text(error),
 
-          // loading
-          (isLoading) ? CircularProgressIndicator() : Container(),
+            // loading
+            (isLoading) ? CircularProgressIndicator() : Container(),
 
-          // result
-          (imageUrl.isNotEmpty)
-              ? Card(
-                clipBehavior: Clip.antiAliasWithSaveLayer,
-                child: Image.network(imageUrl),
-              )
-              : Container(),
-        ],
+            // result
+            (imageUrl.isNotEmpty)
+                ? Card(
+                  clipBehavior: Clip.antiAliasWithSaveLayer,
+                  child: Image.network(imageUrl),
+                )
+                : Container(),
+          ],
+        ),
       ),
     );
   }
