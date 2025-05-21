@@ -27,6 +27,7 @@ A sample Flutter App and Vertex AI
 A sample Agent app
 
 * [Imagine Agent](/adk_imagine/)
+* [App integration with n8n](/ask_n8n/)
 
 Resources
 
