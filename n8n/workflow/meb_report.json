@@ -1,5 +1,5 @@
 {
-  "name": "meb-reports",
+  "name": "meb-report",
   "nodes": [
     {
       "parameters": {
@@ -12,32 +12,33 @@
       "type": "n8n-nodes-base.extractFromFile",
       "typeVersion": 1,
       "position": [
-        -420,
-        -180
+        440,
+        0
       ],
-      "id": "2af787df-135e-456e-8b6f-2d431a434ab5",
+      "id": "acf89983-7b79-4f39-9ebe-6747257318d2",
       "name": "convert to json"
     },
     {
       "parameters": {
-        "fileSelector": "D:/Projects/AIProject/reports/**/*.csv",
+        "fileSelector": "/files/reports/**/*.csv",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -640,
-        -180
+        220,
+        0
       ],
-      "id": "23644b8d-3a6b-4572-9d4b-0f30c7a62aae",
-      "name": "read report files"
+      "id": "9370071f-02e7-489e-a678-19e0e4986706",
+      "name": "read report files",
+      "alwaysOutputData": true
     },
     {
       "parameters": {
         "sortFieldsUi": {
           "sortField": [
             {
-              "fieldName": "count_จำนวน",
+              "fieldName": "sum_จำนวน",
               "order": "descending"
             }
           ]
@@ -47,10 +48,10 @@
       "type": "n8n-nodes-base.sort",
       "typeVersion": 1,
       "position": [
-        240,
-        -180
+        1100,
+        0
       ],
-      "id": "6d6835da-fbfe-45f2-bace-632dbed67dd9",
+      "id": "9c856233-9372-42d0-a60b-f4b5e8a6626f",
       "name": "sort items"
     },
     {
@@ -82,10 +83,10 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        -200,
-        -180
+        660,
+        0
       ],
-      "id": "47726ecf-d1ab-485f-bd58-a725b8cc454c",
+      "id": "c85dccb0-a961-4cbb-a0c4-a7ccc9edfafe",
       "name": "convert field type"
     },
     {
@@ -97,7 +98,7 @@
               "newKey": "title"
             },
             {
-              "currentKey": "count_จำนวน",
+              "currentKey": "sum_จำนวน",
               "newKey": "qt"
             },
             {
@@ -111,10 +112,10 @@
       "type": "n8n-nodes-base.renameKeys",
       "typeVersion": 1,
       "position": [
-        460,
-        -180
+        1320,
+        0
       ],
-      "id": "12d44633-0aff-4776-af23-52c0d4796a90",
+      "id": "0e351ba6-7969-4683-b166-6377e0dc9367",
       "name": "rename keys"
     },
     {
@@ -122,10 +123,10 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.1,
       "position": [
-        -640,
-        160
+        180,
+        220
       ],
-      "id": "734a9136-0fdc-46fd-ad22-3b63817bcde0",
+      "id": "b4661164-201c-4db2-b8ac-bde919f2de1c",
       "name": "Merge",
       "alwaysOutputData": true
     },
@@ -136,43 +137,43 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        -420,
-        160
+        420,
+        220
       ],
-      "id": "bc0b1126-eeb0-4218-aac3-8ad9955cf508",
+      "id": "bcb7c7ce-5e0a-4696-93d1-6e5158ed5bb0",
       "name": "Convert to File"
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "D:\\Projects\\AIProject\\reports\\summary.csv",
+        "fileName": "/files/reports/summary.txt",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        -180,
-        160
+        660,
+        220
       ],
-      "id": "0609da7a-15b6-45d9-829a-69427e163f54",
+      "id": "3ad7ed46-2f92-48a3-b058-4ca2b582f018",
       "name": "Read/Write Files from Disk"
     },
     {
       "parameters": {
-        "modelName": "models/gemini-1.5-flash",
+        "modelName": "models/gemini-2.0-flash",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -20,
-        380
+        840,
+        420
       ],
-      "id": "c683306a-eefe-47f7-a224-74ced26c256a",
+      "id": "7d62402c-3530-4725-9c5a-f9ef37adb763",
       "name": "Google Gemini Chat Model",
       "credentials": {
         "googlePalmApi": {
-          "id": "IrKJTc7DZRFulh6t",
+          "id": "o532atUZyQ1tHPyO",
           "name": "Google Gemini(PaLM) Api account"
         }
       }
@@ -186,26 +187,26 @@
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
-        400,
-        160
+        1280,
+        220
       ],
-      "id": "79ad41d9-9bde-4aef-96f5-d1ecdb97d5cc",
+      "id": "24b483d7-8c1f-4cd8-a0b5-9de7578052ba",
       "name": "convert to report",
       "alwaysOutputData": true
     },
     {
       "parameters": {
         "operation": "write",
-        "fileName": "D:\\Projects\\AIProject\\reports\\report.txt",
+        "fileName": "/files/reports/report.md",
         "options": {}
       },
       "type": "n8n-nodes-base.readWriteFile",
       "typeVersion": 1,
       "position": [
-        640,
-        160
+        1500,
+        220
       ],
-      "id": "043685eb-0ca2-4335-98f0-23771cd431a0",
+      "id": "c43a9546-4644-4411-ba2f-f26645d44af9",
       "name": "Read/Write Files from Disk1"
     },
     {
@@ -217,6 +218,7 @@
               "field": "รายรับจริง (THB)"
             },
             {
+              "aggregation": "sum",
               "field": "จำนวน"
             }
           ]
@@ -227,10 +229,10 @@
       "type": "n8n-nodes-base.summarize",
       "typeVersion": 1.1,
       "position": [
-        20,
-        -180
+        880,
+        0
       ],
-      "id": "65419bae-1932-4537-8af7-153f6841af36",
+      "id": "da23da45-2074-4df1-adc1-2c3fcb768b6b",
       "name": "sale amount"
     },
     {
@@ -252,10 +254,10 @@
       "type": "n8n-nodes-base.summarize",
       "typeVersion": 1.1,
       "position": [
-        -860,
-        160
+        -80,
+        240
       ],
-      "id": "00c35472-be7b-47b2-99b9-6e5782ffb18f",
+      "id": "c0438f1b-4ff4-4501-a87b-c98941a0e855",
       "name": "total sales"
     },
     {
@@ -265,8 +267,8 @@
           "binaryDataKey": "data",
           "summarizationMethodAndPrompts": {
             "values": {
-              "combineMapPrompt": "สรุปรายงานการขายหนังสือ จากข้อมูลนี้ :\n\n\n\"{text}\"\n\n\nสรุปโดยย่อ:\n\nสรุปแต่ละรายการเป็นตาราง:",
-              "prompt": "สรุปรายงานการขายหนังสือ จากข้อมูลนี้ :\n\n\n\"{text}\"\n\n\nสรุปโดยย่อ:\n\nสรุปแต่ละรายการเป็นตาราง:\n\n "
+              "combineMapPrompt": "สรุปรายงานการขายหนังสือ (e-book) จากข้อมูลนี้ :\n\n\"{text}\"\n\nสรุปและวิเคราะห์รายงานการขาย:\n\nสรุปแต่ละรายการเป็นตาราง:",
+              "prompt": "สรุปรายงานการขายหนังสือ (e-book) จากข้อมูลนี้ :\n\n\"{text}\"\n\nสรุปและวิเคราะห์รายงานการขาย:\n\nสรุปแต่ละรายการเป็นตาราง:\n\nรายการหนังสือที่ควรทำโปรโมชั่น:\n\nแนะนำการทำโปรโมชั่น กลุ่มอายุ 25-34,\n35-44 และ 45-54 :\n\nแนะนำช่องทางการโปรโมท:\n\nมี Live tutorial ทุกสัปดาห์ ควรขายเล่มไหนบ้าง:\n\nแนะนำหนังสือที่ควรเขียนเพิ่มเติม:\n"
             }
           }
         }
@@ -274,10 +276,10 @@
       "type": "@n8n/n8n-nodes-langchain.chainSummarization",
       "typeVersion": 2,
       "position": [
-        40,
-        160
+        900,
+        220
       ],
-      "id": "82975dfe-c216-43d3-b1c0-d3473ebcdc5c",
+      "id": "f0d54000-8426-4e6e-9d37-c5ae9fcca3e4",
       "name": "Summarization"
     },
     {
@@ -285,10 +287,10 @@
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
       "position": [
-        -880,
-        -180
+        0,
+        0
       ],
-      "id": "83156c97-1365-4197-8db9-97186b69f449",
+      "id": "04389477-294c-40b1-9cfa-6956c2c49912",
       "name": "When clicking ‘Test workflow’"
     }
   ],
@@ -458,11 +460,11 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "47216a43-6aba-444f-95c1-936c2746f7df",
+  "versionId": "826fb0bc-7b59-4b97-a825-cd8800c150d6",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "535d0d78cde0671315b1828c772abe1ae6d3fd8d1375eafcaf991190831b8ff8"
+    "instanceId": "8c8eb350f67a3e20013b8b1f94901b9f05a22220551a5bf5b60e1e108f4978c6"
   },
-  "id": "HiifDv70MoXZCyNt",
+  "id": "2N4jOpXJnUJnMGzS",
   "tags": []
 }

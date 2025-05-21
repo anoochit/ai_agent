@@ -71,6 +71,8 @@ services:
       # - DB_POSTGRESDB_SSL_CA_CERT= # Path to CA cert if needed
       # - DB_POSTGRESDB_SSL_KEY= # Path to client key if needed
       # - DB_POSTGRESDB_SSL_CERT= # Path to client cert if needed
+    ports:
+      - "5678:5678" # for test only !!
     volumes:
       - n8n_data:/home/node/.n8n
       - ./files:/files # Consider using a named volume 'n8n_files:/files'
