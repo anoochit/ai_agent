@@ -1,16 +1,14 @@
-# ask_imagine
+# Ask Imagine
 
-A new Flutter project.
+A Flutter application that generates images from text prompts using an imagine agent.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Text input for image generation prompts.
+- Displays the generated image.
 
-A few resources to get you started if this is your first Flutter project:
+## How to Run
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Ensure the imagine agent backend service is running.
+2. Update the `agentUri` in `lib/services/imagine_agent.dart` if the backend is not on `http://10.0.2.2:8000`.
+3. Run the Flutter application using `flutter run`.
