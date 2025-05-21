@@ -1,16 +1,23 @@
-# ask_n8n
+# ask_n8n: Chat with your RAG Agent via n8n
 
-A new Flutter project.
+`ask_n8n` is a Flutter application that provides a mobile chat interface to interact with a Retrieval Augmented Generation (RAG) agent. This agent is expected to be accessible via an n8n webhook.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+*   **Chat Interface:** Send messages to and receive responses from a RAG agent.
+*   **Markdown Rendering:** Displays agent responses in markdown format for rich text.
+*   **Session Management:** Maintains a unique session ID for contextual conversations.
+*   **n8n Integration:** Communicates with an n8n webhook (default: `http://localhost:5678/webhook/rag`) which should be connected to your RAG pipeline.
 
-A few resources to get you started if this is your first Flutter project:
+## Prerequisites
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Before running this application, ensure you have:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1.  **Flutter SDK** installed.
+2.  An **n8n instance** running.
+3.  An **n8n webhook workflow** configured to:
+    *   Listen at `http://localhost:5678/webhook/rag` (or update the URI in `lib/services/rag_agent.dart` if your endpoint differs).
+    *   Accept a POST request with a JSON body containing `{"chatInput": "your message", "sessionId": "session_id"}`.
+    *   Connect to your RAG agent/pipeline.
+    *   Return a JSON response. The application currently expects the agent's output in the first element of a list, under an "output" key (e.g., `[{"output": "agent_response_text"}]`).
+
